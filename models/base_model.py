@@ -16,6 +16,9 @@ class BaseModel:
             updated_at (datetime): initially the same as created_at,
             but updated when the model is modified
         """
+        self.id = str(uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
         if kwargs:
             for key, value in kwargs.items():
                 if key in ["created_at", "updated_at"]:
@@ -23,9 +26,7 @@ class BaseModel:
                 if key != "__class__":
                     setattr(self, key, value)
         else:
-            self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
+            models.eng.new(self)
 
     def __str__(self):
         """This method returns the string representation of the model"""
@@ -34,6 +35,7 @@ class BaseModel:
     def save(self):
         """This method updates the updated_at attribute to the current time"""
         self.updated_at = datetime.now()
+        models.eng.save()
 
     def to_dict(self):
         """This method returns a dictionary representation of the model"""

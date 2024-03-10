@@ -7,7 +7,7 @@ from datetime import datetime
 
 class BaseModel:
     """This class is the parent class for all models in the airBnB clone app"""
-    def __init__(self, *args: tuple, **kwargs: dict) -> None:
+    def __init__(self, *args, **kwargs):
         """This method initializes the base model
 
         Attributes:
@@ -27,15 +27,15 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
 
-    def __str__(self) -> str:
+    def __str__(self):
         """This method returns the string representation of the model"""
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
-    def save(self) -> None:
+    def save(self):
         """This method updates the updated_at attribute to the current time"""
         self.updated_at = datetime.now()
 
-    def to_dict(self) -> dict:
+    def to_dict(self):
         """This method returns a dictionary representation of the model"""
         model_dict = self.__dict__.copy()
         model_dict["__class__"] = self.__class__.__name__

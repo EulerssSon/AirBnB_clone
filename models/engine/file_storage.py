@@ -1,47 +1,50 @@
 #!/usr/bin/python3
-"""This module contains the base model the parent for
-all models in airBnB clone app"""
-from uuid import uuid4
-from datetime import datetime
-import models
+"""Defines the FileStorage class."""
+import json
+from models.base_model import BaseModel
+"""
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
+"""
 
+class FileStorage:
+    """Represent an abstracted storage engine.
 
-class BaseModel:
-    """This class is the parent class for all models in the airBnB clone app"""
-    def __init__(self, *args, **kwargs):
-        """This method initializes the base model
+    Attributes:
+        __file_path (str): The name of the file to save objects to.
+        __objects (dict): A dictionary of instantiated objects.
+    """
+    __file_path = "file.json"
+    __objects = {}
 
-        Attributes:
-            id (str): the unique id of the model
-            created_at (datetime): the time the model was created
-            updated_at (datetime): initially the same as created_at,
-            but updated when the model is modified
-        """
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-        if kwargs:
-            for key, value in kwargs.items():
-                if key in ["created_at", "updated_at"]:
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                if key != "__class__":
-                    setattr(self, key, value)
-        else:
-            models.storage.new(self)
+    def all(self):
+        """Return the dictionary __objects."""
+        return FileStorage.__objects
 
-    def __str__(self):
-        """This method returns the string representation of the model"""
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+    def new(self, obj):
+        """Set in __objects obj with key <obj_class_name>.id"""
+        ocname = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
 
     def save(self):
-        """This method updates the updated_at attribute to the current time"""
-        self.updated_at = datetime.now()
-        models.storage.save()
+        """Serialize __objects to the JSON file __file_path."""
+        odict = FileStorage.__objects
+        objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
+        with open(FileStorage.__file_path, "w") as f:
+            json.dump(objdict, f)
 
-    def to_dict(self):
-        """This method returns a dictionary representation of the model"""
-        model_dict = self.__dict__.copy()
-        model_dict["__class__"] = self.__class__.__name__
-        model_dict["created_at"] = self.created_at.isoformat()
-        model_dict["updated_at"] = self.updated_at.isoformat()
-        return model_dict
+    def reload(self):
+        """Deserialize the JSON file __file_path to __objects, if it exists."""
+        try:
+            with open(FileStorage.__file_path) as f:
+                objdict = json.load(f)
+                for o in objdict.values():
+                    cls_name = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(cls_name)(**o))
+        except FileNotFoundError:
+            return

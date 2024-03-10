@@ -1,6 +1,8 @@
-"""This module contains the base model the parent for all models in airBnB clone app"""
+"""This module contains the base model
+the parent for all models in airBnB clone app"""
 from uuid import uuid4
 from datetime import datetime
+from models import storage
 
 
 class BaseModel:
@@ -25,14 +27,17 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self) -> str:
         """This method returns the string representation of the model"""
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self) -> None:
-        """This method updates the updated_at attribute to the current time"""
+        """This method updates the updated_at attribute to the current time
+        """
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self) -> dict:
         """This method returns a dictionary representation of the model"""

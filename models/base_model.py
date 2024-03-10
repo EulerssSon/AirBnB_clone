@@ -3,6 +3,7 @@
 all models in airBnB clone app"""
 from uuid import uuid4
 from datetime import datetime
+import models
 
 
 class BaseModel:

@@ -6,10 +6,11 @@ in active or interactive mode
 import cmd
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+from models.user import User
 import models
 import json
 
-classes = {"BaseModel": BaseModel}
+classes = {"BaseModel": BaseModel, "User": User}
 
 
 class HBNBCommand(cmd.Cmd):

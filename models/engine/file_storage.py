@@ -33,6 +33,7 @@ class FileStorage:
         """This method reloads the objects from the file to storage"""
         try:
             from models.base_model import BaseModel
+            from models.user import User
             try:
                 with open(FileStorage.__file_path, "r") as file:
                     obj_dict = load(file)

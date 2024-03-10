@@ -27,7 +27,7 @@ class BaseModel:
                 if key != "__class__":
                     setattr(self, key, value)
         else:
-            models.eng.new(self)
+            models.storage.new(self)
 
     def __str__(self):
         """This method returns the string representation of the model"""
@@ -36,7 +36,7 @@ class BaseModel:
     def save(self):
         """This method updates the updated_at attribute to the current time"""
         self.updated_at = datetime.now()
-        models.eng.save()
+        models.storage.save()
 
     def to_dict(self):
         """This method returns a dictionary representation of the model"""

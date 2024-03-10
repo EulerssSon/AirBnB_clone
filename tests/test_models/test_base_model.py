@@ -6,6 +6,7 @@ from datetime import datetime
 from time import sleep
 import json
 import os
+import models
 
 
 class TestBaseModel(unittest.TestCase):
@@ -179,3 +180,142 @@ class TestBaseModel(unittest.TestCase):
                 my_new_model.to_dict())
         self.assertEqual(self.base_model1.__str__(), my_new_model.__str__())
         self.assertEqual(self.base_model1.__class__, my_new_model.__class__)
+
+    def test_save_reload(self):
+        """This method tests the save and reload methods of the file storage class"""
+        model = BaseModel()
+        model.save()
+        key = f"BaseModel.{model.id}"
+        models.storage.save()
+        models.storage.reload()
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+    
+    def test_base_integrated_with_storage_engine(self):
+        """This method tests the base model integrated with the storage engine"""
+        model = BaseModel()
+        model.save()
+        key = f"BaseModel.{model.id}"
+        models.storage.save()
+        models.storage.reload()
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+        # test the new method of the storage
+        model = BaseModel()
+        models.storage.new(model)
+        key = f"BaseModel.{model.id}"
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+        # test the all method of the storage
+        self.assertIsInstance(models.storage.all(), dict)
+        self.assertIn(f"BaseModel.{model.id}", models.storage.all())
+        # test key and value of the dictionary
+        key = f"BaseModel.{model.id}"
+        value = models.storage.all()[key]
+        self.assertIsInstance(value, BaseModel)
+        self.assertDictEqual(value.to_dict(), model.to_dict())
+        # test the save method of the storage
+        model.save()
+        models.storage.save()
+        with open("file.json", "r") as file:
+            obj_dict = json.load(file)
+            self.assertIn(key, obj_dict)
+            self.assertDictEqual(obj_dict[key], model.to_dict())
+        # test the reload method of the storage
+        models.storage.reload()
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+        # test the save and reload methods of the storage
+        model = BaseModel()
+        model.save()
+        key = f"BaseModel.{model.id}"
+        models.storage.save()
+        models.storage.reload()
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+    
+    def test_integratoin_with_storage_and_adding_new_attr(self):
+        """This method tests the base model integrated with the storage engine"""
+        model = BaseModel()
+        model.save()
+        key = f"BaseModel.{model.id}"
+        models.storage.save()
+        models.storage.reload()
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+        # test the new method of the storage
+        model = BaseModel()
+        model.name = "John"
+        model.age = 20
+        models.storage.new(model)
+        key = f"BaseModel.{model.id}"
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+        # test the all method of the storage
+        self.assertIsInstance(models.storage.all(), dict)
+        self.assertIn(f"BaseModel.{model.id}", models.storage.all())
+        # test key and value of the dictionary
+        key = f"BaseModel.{model.id}"
+        value = models.storage.all()[key]
+        self.assertIsInstance(value, BaseModel)
+        self.assertDictEqual(value.to_dict(), model.to_dict())
+        # test the save method of the storage
+        model.save()
+        models.storage.save()
+        with open("file.json", "r") as file:
+            obj_dict = json.load(file)
+            self.assertIn(key, obj_dict)
+            self.assertDictEqual(obj_dict[key], model.to_dict())
+        # test the reload method of the storage
+        models.storage.reload()
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+        # test the save and reload methods of the storage
+        model = BaseModel()
+        model.save()
+        key = f"BaseModel.{model.id}"
+        models.storage.save()
+        models.storage.reload()
+        self.assertIn(key, models.storage.all())
+        self.assertDictEqual(models.storage.all()[
+                             key].to_dict(), model.to_dict())
+    
+        # BaseModel instance is created with custom values
+    def test_base_model_custom_values(self):
+        custom_values = {
+            "id": "123",
+            "created_at": "2022-01-01T00:00:00.000000",
+            "updated_at": "2022-01-02T00:00:00.000000"
+        }
+        model = BaseModel(**custom_values)
+        self.assertIsInstance(model, BaseModel)
+        self.assertEqual(model.id, "123")
+        self.assertEqual(model.created_at, datetime.strptime("2022-01-01T00:00:00.000000", "%Y-%m-%dT%H:%M:%S.%f"))
+        self.assertEqual(model.updated_at, datetime.strptime("2022-01-02T00:00:00.000000", "%Y-%m-%dT%H:%M:%S.%f"))
+
+        # BaseModel instance is saved and updated_at attribute is updated
+    # BaseModel instance is saved and updated_at attribute is updated with all possible attributes
+    def test_base_model_save_and_update(self):
+        model = BaseModel()
+        model.save()
+        initial_updated_at = model.updated_at
+        model.attr1 = "value1"
+        model.attr2 = "value2"
+        model.save()
+        self.assertNotEqual(initial_updated_at, model.updated_at)
+    
+        # BaseModel instance is created with all possible attributes
+    def test_base_model_with_all_attributes(self):
+        model = BaseModel(id="123", created_at="2022-01-01T00:00:00.000000", updated_at="2022-01-01T00:00:00.000000")
+        self.assertIsInstance(model, BaseModel)
+        self.assertEqual(model.id, "123")
+        self.assertEqual(model.created_at, datetime.strptime("2022-01-01T00:00:00.000000", "%Y-%m-%dT%H:%M:%S.%f"))
+        self.assertEqual(model.updated_at, datetime.strptime("2022-01-01T00:00:00.000000", "%Y-%m-%dT%H:%M:%S.%f"))

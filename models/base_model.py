@@ -20,12 +20,12 @@ class BaseModel:
         self.id = str(uuid4())
         self.created_at = datetime.now()
         self.updated_at = datetime.now()
-        if len(kwargs) != 0:
-            for k, v in kwargs.items():
-                if k == "created_at" or k == "updated_at":
-                    self.__dict__[k] = datetime.strptime(v, "%Y-%m-%dT%H:%M:%S.%f")
-                else:
-                    self.__dict__[k] = v
+        if kwargs:
+            for key, value in kwargs.items():
+                if key in ["created_at", "updated_at"]:
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key != "__class__":
+                    setattr(self, key, value)
         else:
             models.storage.new(self)
 

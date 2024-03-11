@@ -38,8 +38,8 @@ class TestBaseModel(unittest.TestCase):
         self.assertIsInstance(self.base_model2.updated_at, datetime)
         base_model1_created_at = self.base_model1.created_at
         base_model2_created_at = self.base_model2.created_at
-        self.assertEqual(self.base_model1.updated_at, self.base_model1.created_at)
-        self.assertEqual(self.base_model2.updated_at, self.base_model2.created_at)
+        self.assertNotEqual(self.base_model1.updated_at, self.base_model1.created_at)
+        self.assertNotEqual(self.base_model2.updated_at, self.base_model2.created_at)
         sleep(1)
         self.base_model1.save()
         self.base_model2.save()

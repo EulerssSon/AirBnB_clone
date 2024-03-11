@@ -163,7 +163,7 @@ class HBNBCommand(cmd.Cmd):
         setattr(models.storage.all()[key], attr, value)
         models.storage.save()
 
-    def default(self, arg: str) -> bool | None:
+    def default(self, arg: str):
         """method handles the default behavior of the command interpreter"""
         if arg.find(".") != -1 and arg.find("(") != -1 and arg.find(")") != -1:
             if "count" in arg:

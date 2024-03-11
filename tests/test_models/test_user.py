@@ -358,3 +358,6 @@ class TestUser_save(unittest.TestCase):
         us = User()
         with self.assertRaises(TypeError):
             us.to_dict(None)
+
+if __name__ == "__main__":
+    unittest.main()

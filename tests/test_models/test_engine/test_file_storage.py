@@ -175,3 +175,7 @@ class TestFileStorage(unittest.TestCase):
         self.storage.reload()
         self.assertIn(key, self.storage.all())
         self.assertDictEqual(self.storage.all()[key].to_dict(), model.to_dict())
+
+
+if __name__ == "__main__":
+    unittest.main()

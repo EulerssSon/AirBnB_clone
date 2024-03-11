@@ -319,3 +319,6 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(model.id, "123")
         self.assertEqual(model.created_at, datetime.strptime("2022-01-01T00:00:00.000000", "%Y-%m-%dT%H:%M:%S.%f"))
         self.assertEqual(model.updated_at, datetime.strptime("2022-01-01T00:00:00.000000", "%Y-%m-%dT%H:%M:%S.%f"))
+
+if __name__ == "__main__":
+    unittest.main()

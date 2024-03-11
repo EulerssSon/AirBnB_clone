@@ -4,23 +4,26 @@ to run and test the app, run the console module
 in active or interactive mode
 """
 import cmd
+import models
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 from models.user import User
-# from models.state import State
-# from models.city import City
-# from models.place import Place
-# from models.amenity import Amenity
-# from models.review import Review
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 import json
 
-classes = {"BaseModel": BaseModel, "User": User}
-# , "State": State,
-# "City": City, "Place": Place, "Amenity": Amenity, "Review": Review}
+my_classes = {
+    "BaseModel": BaseModel, "User": User, "State": State, "City": City,
+    "Place": Place, "Amenity": Amenity, "Review": Review
+}
 
 
 class HBNBCommand(cmd.Cmd):
     """This class is the command interpreter for the airBnB clone app
+
     Attributes:
         prompt (str): the prompt for the command interpreter
     """
@@ -49,10 +52,10 @@ class HBNBCommand(cmd.Cmd):
         if not args or args == "":
             print("** class name missing **")
             return
-        if args not in classes:
+        if args not in my_classes:
             print("** class doesn't exist **")
             return
-        new_instance = classes[args]()
+        new_instance = my_classes[args]()
         new_instance.save()
         print(new_instance.id)
 
@@ -68,7 +71,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         args = args.split(" ")
-        if args[0] not in classes:
+        if args[0] not in my_classes:
             print("** class doesn't exist **")
             return
         if len(args) < 2:
@@ -92,7 +95,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
         args = args.split(" ")
-        if args[0] not in classes:
+        if args[0] not in my_classes:
             print("** class doesn't exist **")
             return
         if len(args) < 2:
@@ -115,7 +118,7 @@ class HBNBCommand(cmd.Cmd):
         if not args or args == "":
             print([str(obj) for obj in models.storage.all().values()])
             return
-        if args not in classes:
+        if args not in my_classes:
             print("** class doesn't exist **")
             return
         else:
@@ -126,14 +129,13 @@ class HBNBCommand(cmd.Cmd):
         """This method updates an instance
 
         Args:
-            args (str): the class name, id, attribute
-            and value of the instance to update
+            args (str):classid, attribute and value of the instance to update
         """
         if not args:
             print("** class name missing **")
             return
         args = args.split(" ")
-        if args[0] not in classes:
+        if args[0] not in my_classes:
             print("** class doesn't exist **")
             return
         if len(args) < 2:

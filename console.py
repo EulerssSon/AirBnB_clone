@@ -195,3 +195,7 @@ class HBNBCommand(cmd.Cmd):
                     self.do_destroy(f"{cls_name} {ins_id}")
         else:
             return super().default(arg)
+
+
+if __name__ == "__main__":
+    HBNBCommand().cmdloop()

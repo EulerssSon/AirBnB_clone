@@ -181,8 +181,6 @@ class HBNBCommand(cmd.Cmd):
             print(len([obj for obj in models.storage.all().values()
                        if type(obj).__name__ == args]))
 
-
-
     def default(self, arg: str):
         """method handles the default behavior of the command interpreter"""
         if arg.find(".") != -1 and arg.find("(") != -1 and arg.find(")") != -1:
@@ -213,8 +211,6 @@ class HBNBCommand(cmd.Cmd):
                     self.do_destroy(cls_name)
                 else:
                     self.do_destroy(f"{cls_name} {ins_id}")
-            # User.update("38f22813-2753-4d42-b37c-57a17f1e4f88", "first_name", "John")
-            # User.update("38f22813-2753-4d42-b37c-57a17f1e4f88", {'first_name': "John", "age": 89})
             elif "update" in arg:
                 ins_id = arg.find("(")
                 ins_id = arg[ins_id + 2:arg.find(",") - 1]
@@ -251,6 +247,7 @@ class HBNBCommand(cmd.Cmd):
                 self.do_update(f"{cls_name} {ins_id} {attr} {value}")
         else:
             return super().default(arg)
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()

@@ -163,6 +163,24 @@ class HBNBCommand(cmd.Cmd):
         setattr(models.storage.all()[key], attr, value)
         models.storage.save()
 
+    def do_count(self, args: str) -> int:
+        """This method counts the number of instances of a class
+
+        Args:
+            args (str): the class name of the instances to count
+        Returns:
+            int: the number of instances of the class
+        """
+        if not args or args == "":
+            print(len(models.storage.all()))
+            return
+        if args not in my_classes:
+            print("** class doesn't exist **")
+            return
+        else:
+            print(len([obj for obj in models.storage.all().values()
+                       if type(obj).__name__ == args]))
+
     def default(self, arg: str):
         """method handles the default behavior of the command interpreter"""
         if arg.find(".") != -1 and arg.find("(") != -1 and arg.find(")") != -1:

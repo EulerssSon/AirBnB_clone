@@ -163,6 +163,35 @@ class HBNBCommand(cmd.Cmd):
         setattr(models.storage.all()[key], attr, value)
         models.storage.save()
 
-
-if __name__ == "__main__":
-    HBNBCommand().cmdloop()
+    def default(self, arg: str) -> bool | None:
+        """method handles the default behavior of the command interpreter"""
+        if arg.find(".") != -1 and arg.find("(") != -1 and arg.find(")") != -1:
+            if "count" in arg:
+                arg = arg.replace("()", "")
+                arg = arg.split(".")
+                self.do_count(arg[0])
+            elif "all" in arg:
+                arg = arg.replace("()", "")
+                arg = arg.split(".")
+                self.do_all(arg[0])
+            elif "show" in arg:
+                ins_id = arg.find("(")
+                ins_id = arg[ins_id + 2:arg.find(")") - 1]
+                cls_name = arg[:arg.find(".")]
+                if ins_id is None or len(ins_id.strip()) == 0:
+                    self.do_show(cls_name)
+                else:
+                    self.do_show(f"{cls_name} {ins_id}")
+            elif "destroy" in arg:
+                ins_id = arg.find("(")
+                ins_id = arg[ins_id + 2:arg.find(")") - 1]
+                cls_name = arg[:arg.find(".")]
+                # how to split a condtion in python on 2 lines
+                # answer: use a backslash
+                if ins_id.strip() == "None" or ins_id.strip()\
+                        == "" or ins_id is None:
+                    self.do_destroy(cls_name)
+                else:
+                    self.do_destroy(f"{cls_name} {ins_id}")
+        else:
+            return super().default(arg)

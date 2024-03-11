@@ -177,5 +177,14 @@ class TestFileStorage(unittest.TestCase):
         self.assertDictEqual(self.storage.all()[key].to_dict(), model.to_dict())
 
 
+    def test_file_stoarge__objects(self):
+        """This method tests the file storage objects"""
+        self.assertIsInstance(self.storage._FileStorage__objects, dict)
+    
+    def test_file_path(self):
+        """This method tests the file path"""
+        self.assertEqual(self.storage._FileStorage__file_path, "file.json")
+        self.assertIsInstance(self.storage._FileStorage__file_path, str)
+
 if __name__ == "__main__":
     unittest.main()

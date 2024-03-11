@@ -186,5 +186,43 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(self.storage._FileStorage__file_path, "file.json")
         self.assertIsInstance(self.storage._FileStorage__file_path, str)
 
+    def test_save_method(self):
+        """This method tests the save method"""
+        self.assertEqual(self.storage.save.__name__, "save")
+
+        # save method should save the objects in storage to a file
+        self.storage.save()
+        with open("file.json", "r") as file:
+            obj_dict = json.load(file)
+            self.assertIn(f"BaseModel.{self.model.id}", obj_dict)
+            self.assertDictEqual(obj_dict[f"BaseModel.{self.model.id}"], self.model.to_dict())
+
+        # check length of the file
+        self.assertEqual(len(obj_dict), len(self.storage.all()))
+
+        #add new model instance and save
+        model = BaseModel()
+        self.storage.new(model)
+        key = f"BaseModel.{model.id}"
+        self.storage.save()
+        with open("file.json", "r") as file:
+            obj_dict = json.load(file)
+            self.assertIn(key, obj_dict)
+            self.assertDictEqual(obj_dict[key], model.to_dict())
+
+    def test_reload_method(self):
+        """This method tests the reload method"""
+        self.assertEqual(self.storage.reload.__name__, "reload")
+
+        # reload method should reload the objects from the file to storage
+        model = BaseModel()
+        model.save()
+        key = f"BaseModel.{model.id}"
+        self.storage.save()
+        self.storage.reload()
+        self.assertIn(key, self.storage.all())
+        self.assertDictEqual(self.storage.all()[key].to_dict(), model.to_dict())
+
+
 if __name__ == "__main__":
     unittest.main()

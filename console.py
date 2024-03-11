@@ -204,13 +204,34 @@ class HBNBCommand(cmd.Cmd):
                 ins_id = arg.find("(")
                 ins_id = arg[ins_id + 2:arg.find(")") - 1]
                 cls_name = arg[:arg.find(".")]
-                # how to split a condtion in python on 2 lines
-                # answer: use a backslash
                 if ins_id.strip() == "None" or ins_id.strip()\
                         == "" or ins_id is None:
                     self.do_destroy(cls_name)
                 else:
                     self.do_destroy(f"{cls_name} {ins_id}")
+            elif "update" in arg:
+                ins_id = arg.find("(")
+                ins_id = arg[ins_id + 2:arg.find(",") - 1]
+                cls_name = arg[:arg.find(".")]
+                if cls_name not in my_classes:
+                    print("** class doesn't exist **")
+                    return
+                if ins_id.strip() == "None" or ins_id.strip()\
+                        == "" or ins_id is None:
+                    print("** instance id missing **")
+                    return
+                # how to count how many " in a string
+                if arg.count('"') == 2:
+                    print("** attribute name missing **")
+                    return
+                if arg.count('"') == 4:
+                    print("** value missing **")
+                    return
+                arg = arg.split(", ")
+                attr = arg[1].strip('"')
+                value = arg[2].strip('"')
+                value = arg[2].strip('")')
+                self.do_update(f"{cls_name} {ins_id} {attr} {value}")
         else:
             return super().default(arg)
 

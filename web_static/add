@@ -1,0 +1,11 @@
+#!/bin/bash
+echo 'commit'
+read xx
+chmod +x *.c
+chmod +x *.py
+chmod +x *.js
+chmod +x *.html
+chmod +x *.css
+git add .
+git commit -m ${xx}
+git push
